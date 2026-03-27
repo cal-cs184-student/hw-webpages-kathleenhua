@@ -76,8 +76,37 @@
 		</div>
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b> 	Walk through your BVH construction algorithm. Explain the heuristic you chose for picking the splitting point.</b>
 
+		<br>My BVH construction algorithm is using the Surface Area Heuristic to pick the splitting point. My algorithm begins with iterating through the primitives between the given start and end and computes the bounding box and centroid bbox. The centroid_bbox is expanding to include the current bbox’s centroid. If we found less primitives than our maximum leaf size, we’ll just store the start and end iterators in the node and return the node. Otherwise, we’ll begin with our recursion to find the best axis to split across. To keep the tree balanced, we look for the longest “extent” of the centroid bbox. Then we apply our Surface Area Heuristic or the idea that the probability of a ray hitting a bbox is proportional to its surface area. We can divide the centroids into 12 buckets and then evaluate each boundary as an option to split. Then we can choose the boundary that minimizes the surface area of the left box * number of left buckets plus the surface of the right box * number of right buckets. There’s also an additional check for if all primitives end up on one side of the split then we just split in the median to force the tree to stay balanced.
+
+		<br>I chose the <b>Surface Area Heuristic</b> because it improves upon just splitting at the median by estimating the traversal cost of rays so it’s going to produce better acceleration structures than just always splitting in the median. 
+		<br><b>Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="img/part_2/maxplanck.png" width="400px"/>
+				  <figcaption>Max Planck</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="img/part_2/cblucy.png" width="400px"/>
+				  <figcaption>Lucy</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="img/part_2/cbdragon.png" width="400px"/>
+				  <figcaption>Dragon</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<br><b>	Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.</b>
+		<br><i>CBbunny.dae:</i> [181.0399s, 0.1428s]
+		<br><i>CBdragon.dae:</i> [1125.0582s, 0.1972s]
+		<br><i>peter.dae:</i> [320.1122s, 0.2642s]
+		<br>The rendering times differed significantly for the different files. I chose to test the differences in rendering times using CBbunny, CBdragon, and peter dae files. Both CBbunny and Peter took less than 5 minutes to generate and CBdragon took 18 minutes to generate. Comparing this to using the BVH acceleration, all three took less than 0.5 seconds to generate, showing the efficacy of using BVH to determine our intersections as opposed to checking every primitive.
+		
 		<h2>Part 3: Direct Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
