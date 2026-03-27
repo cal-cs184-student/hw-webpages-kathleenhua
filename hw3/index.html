@@ -125,7 +125,7 @@
 						</td>
 						<td style="text-align: center;">
 						<img src="img/part_3/both_imp/CBbunny_impuse copy.png" width="400px"/>
-						<figcaption>CBbunny Direct Lighting by Importance Sampling Lights</figcaption>
+						<figcaption>CBbunny Direct Lighting by Importance Sampling</figcaption>
 						</td>
 					</tr>
 					</table>
@@ -139,7 +139,7 @@
 						</td>
 						<td style="text-align: center;">
 						<img src="img/part_3/both_imp/CBspheres_lambertian_important copy.png" width="400px"/>
-						<figcaption>CBspheres Direct Lighting by Importance Sampling Lights</figcaption>
+						<figcaption>CBspheres Direct Lighting by Importance Sampling</figcaption>
 						</td>
 					</tr>
 					</table>
@@ -150,7 +150,7 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="img/part_3/one_area_light/bunny_l1 copy.png" width="400px"/>
+				  <img src="img/part_4/dir_and_ind/part4dir_spheres.png" width="400px"/>
 				  <figcaption>1 Light Ray, 1 sample per pixel</figcaption>
 				</td>
 				<td style="text-align: center;">
@@ -172,12 +172,141 @@
 		</div>
 		<br><b>Compare the results between uniform hemisphere sampling and lighting sampling in a one paragraph analysis.</b>
 
-		<br>n the uniform hemisphere renderings, the images are often more static-y due to the random sampling of directions across the hemisphere. This is in direct opposition to the light importance sampling render which is smoother and cleaner; this is most distinctly noticeable in the shado
+		<br>In the uniform hemisphere renderings, the images are often more static-y due to the random sampling of directions across the hemisphere. This is in direct opposition to the light importance sampling render which is smoother and cleaner; this is most distinctly noticeable in the shado
 
 
 		<h2>Part 4: Global Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Walk through your implementation of the indirect lighting function.</b>
+		<br>My indirect lighting function starts by calculating the direct lighting at the current hit point. If we’re accumulating the bounces, we’ll add the direct lighting to our total. We also want to check if we’re only looking for one bounce: if we are then we’ll return the one_bounce_radiance. Once these checks are done, we can move on to the recursion. I set the Russian roulette probability to 0.65 to estimate paths of infinite length without actually tracing them. We only recurse if our ray depth is greater than one and if we’re on our very first indirect bounce (where ray depth is equal to our max ray depth), we always continue. 
 
+		<br>In the recursive call, we sample a new incoming direction using the surface’s BSDF to get the BSDF value, the incoming direction, and the PDF of the sample. We can then construct the next ray starting from the hit point, moving in the direction of w_in. If the next ray hits something, we call at_least_one_bounce_radiance on the next ray which we can store as L_next to be used in our Monte Carlo Estimator. Then we check how light is being passed back up the recursion stack based on isAccumBounces. If we’re accumulating, we add the contribution from the current frame. If the primary ray has reached max_ray_depth, then this is the result of the recursion and we can return our contribution from the frame. Otherwise, we can pass the light back up to the top of the recursion.
+
+		<br><b>	Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+            <table style="width: 100%; text-align: center; border-collapse: collapse;">
+              <tr>
+                <td style="text-align: center;">
+                  <img src="img/part_4/dir_and_ind/part4dir_spheres.png" width="400px"/>
+                  <figcaption>Spheres, Direct</figcaption>
+                </td>
+                <td style="text-align: center;">
+                  <img src="img/part_4/dir_and_ind/part4ind_spheres.png" width="400px"/>
+                  <figcaption>Spheres, Indirect</figcaption>
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align: center;">
+                  <img src="img/part_4/dir_and_ind/part4dir_bench copy.png" width="400px"/>
+                  <figcaption>Bench, Direct</figcaption>
+                </td>
+                <td style="text-align: center;">
+                  <img src="img/part_4/dir_and_ind/part4ind_bench copy.png" width="400px"/>
+                  <figcaption>Bench, Indirect</figcaption>
+                </td>
+              </tr>
+		<tr>
+                <td style="text-align: center;">
+                  <img src="img/part_4/dir_and_ind/part4dir_wall-e copy.png" width="400px"/>
+                  <figcaption>Wall-E, Direct</figcaption>
+                </td>
+                <td style="text-align: center;">
+                  <img src="img/part_4/dir_and_ind/part4ind_wall-e copy.png" width="400px"/>
+                  <figcaption>Wall-E, Indirect</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+		<br><b>Compare only direct illumination and only indirect illumination. Use 1024 samples per pixel. </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+					<table style="width: 100%; text-align: center; border-collapse: collapse;">
+					<tr>
+						<td style="text-align: center;">
+						<img src="img/part_4/onlys/part4dirONLY_spheres.png" width="400px"/>
+						<figcaption>ONLY Direct</figcaption>
+						</td>
+						<td style="text-align: center;">
+						<img src="img/part_4/onlys/part4indirONLY_spheres.png" width="400px"/>
+						<figcaption>ONLY Indirect</figcaption>
+						</td>
+					</tr>
+					</table>
+				</div>
+		<br><p>In the direct illumination screenshot, the spheres are very harshly lighted and each highlight or shadow is very stark and black (the skylight is also white). On the other hand, in the indirect only photo, the spheres are dimly lit and have colored shadows. All shadows and highlights are also soft. The skylight is also off.</p>
+			<br><b>For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. Explain in your write-up what you see for the 2nd and 3rd bounce of light, and how it contributes to the quality of the rendered image compared to rasterization. Use 1024 samples per pixel.</b>
+			<div style="display: flex; flex-direction: column; align-items: center;">
+				<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				  <tr>
+					<th style="padding: 10px;">False Accumulation</th>
+					<th style="padding: 10px;">Accumulation</th>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m0_bunny.png" width="400px"/>
+					  <figcaption>M0 False Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m0_bunny.png" width="400px"/>
+					  <figcaption>M0 Accumulation</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m1falseacc_bunny.png" width="400px"/>
+					  <figcaption>M1 False Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m1_bunny.png" width="400px"/>
+					  <figcaption>M1 Accumulation</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m2falseacc_bunny.png" width="400px"/>
+					  <figcaption>M2 False Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m2_bunny.png" width="400px"/>
+					  <figcaption>M2 Accumulation</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m3falseacc_bunny.png" width="400px"/>
+					  <figcaption>M3 False Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m3_bunny.png" width="400px"/>
+					  <figcaption>M3 Accumulation</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m4falseacc_bunny.png" width="400px"/>
+					  <figcaption>M4 False Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m4_bunny.png" width="400px"/>
+					  <figcaption>M4 Accumulation</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m5falseacc_bunny.png" width="400px"/>
+					  <figcaption>M5 False Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m5_bunny.png" width="400px"/>
+					  <figcaption>M5 Accumulation</figcaption>
+					</td>
+				  </tr>
+				</table>
+			</div>
+		<br>Between the 2nd and 3rd bounce of light where we are not accumulating bounces, the second bounce of light bunny is significantly brighter than the third bounce of light. Additionally, where there were highlights in the second photo, there are now shadows and vice versa. The shadows are also now primarily colored from the reflections off of the red and blue walls. Compared to rasterization, the rendering of the bunny with either the 2nd or 3rd bounce of light is a little lower quality because the rasterization is deterministic whereas the bouncing of light in the rendering can lead to more noise produced from rays hitting or missing.
+		<br><b><i>Compare rendered views of accumulated and unaccumulated bounces for CBbunny.dae with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag). Use 1024 samples per pixel.</i></b>
+		<br>
+		
+		
+		
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		</div>
