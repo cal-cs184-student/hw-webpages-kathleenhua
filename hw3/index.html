@@ -108,7 +108,72 @@
 		<br>The rendering times differed significantly for the different files. I chose to test the differences in rendering times using CBbunny, CBdragon, and peter dae files. Both CBbunny and Peter took less than 5 minutes to generate and CBdragon took 18 minutes to generate. Comparing this to using the BVH acceleration, all three took less than 0.5 seconds to generate, showing the efficacy of using BVH to determine our intersections as opposed to checking every primitive.
 		
 		<h2>Part 3: Direct Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Walk through both implementations of the direct lighting function.</b>
+		<br>In the hemisphere direct lighting estimation, we’re looping through the number of samples to see if a random directioned ray will intersect with an object. If it does, then we’ll get the emission. Then we multiply the light color by the BSDF and the cosine term and divide by the pdf to normalize the sample. 
+
+		<br>In the light importance, instead of guessing where the light might be, we loop through every known light source in the scene and sample them directly. We do this by looping through the scene->lights and sampling each light. For each light we sample by calling sample_L which gives us the world-space direction toward a point on that specific light, the distance to it, and the pdf for that specific light shape. Then we cast a a ray that’s limited by EPS_F and the distToLight - EPS_F. If the ray hits anything before it reaches the light, the point is in shadow; if it doesn’t, the path is clear and the light reaches the surface. Thus, we can sum up the radiances produced by the sample and divide by pdf.
+
+		<br>When the number of light rays differ, not only does the grainy appearance reduce on the object (the bunny in this case), but the shadow is also decreasing in size, which is to be expected. The edges also gain clarity.
+
+		<br><b>Show some images rendered with both implementations of the direct lighting function.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+					<table style="width: 100%; text-align: center; border-collapse: collapse;">
+					<tr>
+						<td style="text-align: center;">
+						<img src="img/part_3/both_imp/CBbunny_hemuse copy.png" width="400px"/>
+						<figcaption>CBbunny Uniform Hemisphere Sampling</figcaption>
+						</td>
+						<td style="text-align: center;">
+						<img src="img/part_3/both_imp/CBbunny_impuse copy.png" width="400px"/>
+						<figcaption>CBbunny Direct Lighting by Importance Sampling Lights</figcaption>
+						</td>
+					</tr>
+					</table>
+				</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+					<table style="width: 100%; text-align: center; border-collapse: collapse;">
+					<tr>
+						<td style="text-align: center;">
+						<img src="img/part_3/both_imp/CBspheres_lambertian_hem copy.png" width="400px"/>
+						<figcaption>CBspheres Uniform Hemisphere Sampling</figcaption>
+						</td>
+						<td style="text-align: center;">
+						<img src="img/part_3/both_imp/CBspheres_lambertian_important copy.png" width="400px"/>
+						<figcaption>CBspheres Direct Lighting by Importance Sampling Lights</figcaption>
+						</td>
+					</tr>
+					</table>
+				</div>
+
+		<br><b>Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="img/part_3/one_area_light/bunny_l1 copy.png" width="400px"/>
+				  <figcaption>1 Light Ray, 1 sample per pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="img/part_3/one_area_light/bunny_l4 copy.png" width="400px"/>
+				  <figcaption>4 Light Ray, 1 sample per pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="img/part_3/one_area_light/bunny_l16 copy.png" width="400px"/>
+				  <figcaption>16 Light Ray, 1 sample per pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="img/part_3/one_area_light/bunny_l64 copy.png" width="400px"/>
+				  <figcaption>64 Light Ray, 1 sample per pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<br><b>Compare the results between uniform hemisphere sampling and lighting sampling in a one paragraph analysis.</b>
+
+		<br>n the uniform hemisphere renderings, the images are often more static-y due to the random sampling of directions across the hemisphere. This is in direct opposition to the light importance sampling render which is smoother and cleaner; this is most distinctly noticeable in the shado
+
 
 		<h2>Part 4: Global Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
