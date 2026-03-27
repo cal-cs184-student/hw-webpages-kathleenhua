@@ -57,27 +57,19 @@
 
 		<br>Then we need to see what the ray is hitting. In task 3 and 4 we look at the ray’s intersection with triangles and spheres. We are finding the NEAREST intersection point where the t value is within the bounds of min_t and max_t of the input ray where we continuously update max_t as we continue to find a valid intersection such that we only care about objects that are CLOSER than the current closest hit.
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<b>Explain the triangle intersection algorithm you implemented in your own words.</b>
+		<br>For the triangle intersection algorithm, I used the Moller-Trumbore method from lecture. In order to build up the variables and necessary matrices, I can use the given P vectors from the Triangle and then I’ll get the t value and two barycentric coordinates. We can then check if either b value is less than 0 or greater than 1: if either condition is true, the point is not in the triangle. Also, we want to check if the t value is in the range of the min and max values of the ray. If it is, the ray hits the triangle at a visible and valid point.
+		<p>Images with normal shading for a few small .dae files</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="img/part_1/CBspheres.png" width="400px"/>
+				  <figcaption>CBspheres</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="img/part_1/cube.png" width="400px"/>
+				  <figcaption>Cube</figcaption>
 				</td>
 			  </tr>
 			</table>
