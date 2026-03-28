@@ -241,7 +241,7 @@
 				  </tr>
 				  <tr>
 					<td style="text-align: center;">
-					  <img src="img/part_4/bunny_falseacc/part4m0_bunny.png" width="400px"/>
+					  <img src="img/part_4/bunny_falseacc/part4m0falseacc_bunny.png" width="400px"/>
 					  <figcaption>M0 False Accumulation</figcaption>
 					</td>
 					<td style="text-align: center;">
@@ -303,12 +303,118 @@
 			</div>
 		<br>Between the 2nd and 3rd bounce of light where we are not accumulating bounces, the second bounce of light bunny is significantly brighter than the third bounce of light. Additionally, where there were highlights in the second photo, there are now shadows and vice versa. The shadows are also now primarily colored from the reflections off of the red and blue walls. Compared to rasterization, the rendering of the bunny with either the 2nd or 3rd bounce of light is a little lower quality because the rasterization is deterministic whereas the bouncing of light in the rendering can lead to more noise produced from rays hitting or missing.
 		<br><b><i>Compare rendered views of accumulated and unaccumulated bounces for CBbunny.dae with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag). Use 1024 samples per pixel.</i></b>
-		<br>
-		
-		
-		
+		<br><p>When comparing the rendered views of accumulated versus unaccumulated bounces, the unaccumulated bounces continue to get darker and darker as the max_ray_depth increases, whereas the accumulated progressively gets brighter.  </p>
+		<br><b>Russian Roulette rendering with max_ray_depth set to 0, 1, 2, 3, 4, and 100(the -m flag). Use 1024 samples per pixel.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+				<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_falseacc/part4m0_bunny.png" width="400px"/>
+					  <figcaption>Russian Roulette M0 Accumulation</figcaption>
+					</td>
+					  <td style="text-align: center;">
+					  <img src="img/part_4/bunny_max_ray_depth/part4m1_bunny.png" width="400px"/>
+					  <figcaption>Russian Roulette M1 Accumulation</figcaption>
+					</td>
+					  <td style="text-align: center;">
+					  <img src="img/part_4/bunny_max_ray_depth/part4m2_bunny.png" width="400px"/>
+					  <figcaption>Russian Roulette M2 Accumulation</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_max_ray_depth/part4m3_bunny.png" width="400px"/>
+					  <figcaption>Russian Roulette M3 Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_max_ray_depth/part4m4_bunny.png" width="400px"/>
+					  <figcaption>Russian Roulette M4 Accumulation</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_max_ray_depth/part4m5_bunny.png" width="400px"/>
+					  <figcaption>Russian Roulette M4 Accumulation</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/bunny_max_ray_depth/part4m100_bunny copy.png" width="400px"/>
+					  <figcaption>Russian Roulette M100 Accumulation</figcaption>
+					</td>
+				  </tr>
+				</table>
+			</div>
+		<br><b>	Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.</b>
+		<br>When comparing the rendered views between the various sample-per-pixel rates, it becomes apparent that the greater the number of samples that we’re taking, the clearer the images that we’re rendering and the less static (aliasing) there is. While the rendering took longer every time the number of samples we were taking, the quality also scaled up with the time. In the images with sampling of 1 and 2, they’re extremely grainy and have severe static. Then, by the 16-sample render, it gets clearer and is not as apparent that there is static.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+				<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				  <tr>
+					<th style="padding: 10px;">False Accumulation</th>
+					<th style="padding: 10px;">Accumulation</th>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/sample_per_pixel/part4s1_bunny.png" width="400px"/>
+					  <figcaption>1 Sample-Per-Pixel</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/sample_per_pixel/part4s2_bunny.png" width="400px"/>
+					  <figcaption>2 Sample-Per-Pixel</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/sample_per_pixel/part4s4_bunny.png" width="400px"/>
+					  <figcaption>4 Sample-Per-Pixel</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/sample_per_pixel/part4s8_bunny.png" width="400px"/>
+					  <figcaption>8 Sample-Per-Pixel</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/sample_per_pixel/part4s16_bunny.png" width="400px"/>
+					  <figcaption>16 Sample-Per-Pixel</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_4/sample_per_pixel/part4s64_bunny.png" width="400px"/>
+					  <figcaption>64 Sample-Per-Pixel</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_4/sample_per_pixel/part4s1024_bunny.png" width="400px"/>
+					  <figcaption>1024 Sample-Per-Pixel</figcaption>
+					</td>
+				  </tr>
+				</table>
+			</div>
 		<h2>Part 5: Adaptive Sampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Explain adaptive sampling. Walk through your implementation of the adaptive sampling.</b>
+		<br>Adaptive sampling is a method of implementing Monte Carlo path tracing while reducing the noise. In regular rendering, noise can be reduced by increasing the number of samples per pixel. However, adaptive sampling allows us to instead check for whether pixels converge faster with low sampling rates and stop sampling if it does converge.
+
+		<br>My implementation initializes a variable to accumulate the radiance of the adaptive samples, and s1 and s2 to store the running sums and sum of squared illuminance values. We can then trace the samples and generate the camera ray. Then we’ll update the adaptive radiance with our calculated radiance from est_radiance_global_illumination, evaluate the illumination, and then update our s1 and s2 values. Every samplesPerBatch samples, we’ll check for convergence by computing the sample mean, variance and the I value. If the pixel is converged, we want to break. Then we average out the final radiance over the number of samples taken and update our buffer for that pixel.		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="img/part_5/part5_bunny_l1m5 copy.png" width="400px"/>
+				  <figcaption>Bunny, L=1, M=5</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="img/part_5/part5_bunny_l1m5_rate copy.png" width="400px"/>
+				  <figcaption>Bunny Rate, L=1, M=5</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="img/part_5/part5_spheres_l1m5 copy.png" width="400px"/>
+				  <figcaption>Spheres, L=1, M=5</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="img/part_5/part5_spheres_l1m5_rate copy.png" width="400px"/>
+				  <figcaption>Spheres Rate, L=1, M=5</figcaption>
+				</td>
+			  </tr>
+			</table>
 		</div>
 	</body>
 </html>
