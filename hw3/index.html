@@ -399,7 +399,7 @@
 
 		<br>My implementation initializes a variable to accumulate the radiance of the adaptive samples, and s1 and s2 to store the running sums and sum of squared illuminance values. We can then trace the samples and generate the camera ray. Then we’ll update the adaptive radiance with our calculated radiance from est_radiance_global_illumination, evaluate the illumination, and then update our s1 and s2 values. Every samplesPerBatch samples, we’ll check for convergence by computing the sample mean, variance and the I value. If the pixel is converged, we want to break. Then we average out the final radiance over the number of samples taken and update our buffer for that pixel.		</div>
 		<div style="display: flex; flex-direction: column; align-items: center;">
-			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			<table style="text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
 				  <img src="img/part_5/part5_bunny_l1m5 copy.png" width="400px"/>
