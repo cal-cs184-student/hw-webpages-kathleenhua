@@ -7,35 +7,18 @@
 				text-align: center;
 			}
 
-				.container {
-					margin: 0 auto;
-					padding: 50px 6%;
-				}
+			.container {
+				margin: 0 auto;
+				padding: 60px 20%;
+			}
 
 			figure {
 				text-align: center;
 			}
 
-				img {
-					display: inline-block;
-					max-width: 100%;
-					height: auto;
-				}
-
-				table {
-					width: 100%;
-					table-layout: fixed;
-				}
-
-				td, th {
-					padding: 8px;
-					vertical-align: top;
-				}
-
-				table img {
-					width: 100%;
-					max-width: 320px;
-				}
+			img {
+				display: inline-block;
+			}
 
 			body {
 				font-family: 'Inter', sans-serif;
@@ -99,23 +82,25 @@
 
 		<br>I chose the <b>Surface Area Heuristic</b> because it improves upon just splitting at the median by estimating the traversal cost of rays so it’s going to produce better acceleration structures than just always splitting in the median. 
 		<br><b>Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.</b>
-		<div style="display: flex; flex-direction: column; align-items: center;">
-			<table style="width: 100%; text-align: center; border-collapse: collapse;">
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="img/part_2/maxplanck.png" width="400px"/>
-				  <figcaption>Max Planck</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="img/part_2/cblucy.png" width="400px"/>
-				  <figcaption>Lucy</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="img/part_2/cbdragon.png" width="400px"/>
-				  <figcaption>Dragon</figcaption>
-				</td>
-			  </tr>
-			</table>
+			<div style="display: flex; flex-direction: column; align-items: center;">
+				<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="img/part_2/maxplanck.png" width="400px"/>
+					  <figcaption>Max Planck</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="img/part_2/cblucy.png" width="400px"/>
+					  <figcaption>Lucy</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td colspan="2" style="text-align: center;">
+					  <img src="img/part_2/cbdragon.png" width="400px"/>
+					  <figcaption>Dragon</figcaption>
+					</td>
+				  </tr>
+				</table>
 		</div>
 
 		<br><b>	Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.</b>
@@ -322,87 +307,91 @@
 		<br><b><i>Compare rendered views of accumulated and unaccumulated bounces for CBbunny.dae with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag). Use 1024 samples per pixel.</i></b>
 		<br><p>When comparing the rendered views of accumulated versus unaccumulated bounces, the unaccumulated bounces continue to get darker and darker as the max_ray_depth increases, whereas the accumulated progressively gets brighter.  </p>
 		<br><b>Russian Roulette rendering with max_ray_depth set to 0, 1, 2, 3, 4, and 100(the -m flag). Use 1024 samples per pixel.</b>
-		<div style="display: flex; flex-direction: column; align-items: center;">
-				<table style="width: 100%; text-align: center; border-collapse: collapse;">
-				  <tr>
-					<td style="text-align: center;">
-					  <img src="img/part_4/bunny_falseacc/part4m0_bunny.png" width="400px"/>
-					  <figcaption>Russian Roulette M0 Accumulation</figcaption>
-					</td>
-					  <td style="text-align: center;">
-					  <img src="img/part_4/bunny_falseacc/part4m1_bunny.png" width="400px"/>
-					  <figcaption>Russian Roulette M1 Accumulation</figcaption>
-					</td>
-					  <td style="text-align: center;">
-					  <img src="img/part_4/bunny_falseacc/part4m2_bunny.png" width="400px"/>
-					  <figcaption>Russian Roulette M2 Accumulation</figcaption>
-					</td>
-				  </tr>
-				  <tr>
-					<td style="text-align: center;">
-					  <img src="img/part_4/bunny_falseacc/part4m3_bunny.png" width="400px"/>
-					  <figcaption>Russian Roulette M3 Accumulation</figcaption>
-					</td>
-					<td style="text-align: center;">
-					  <img src="img/part_4/bunny_falseacc/part4m4_bunny.png" width="400px"/>
-					  <figcaption>Russian Roulette M4 Accumulation</figcaption>
-					</td>
-					<td style="text-align: center;">
-					  <img src="img/part_4/bunny_falseacc/part4m5_bunny.png" width="400px"/>
-					  <figcaption>Russian Roulette M4 Accumulation</figcaption>
-					</td>
-				  </tr>
-				  <tr>
-					<td style="text-align: center;">
-					  <img src="img/part_4/bunny_max_ray_depth/part4m100_bunny copy.png" width="400px"/>
-					  <figcaption>Russian Roulette M100 Accumulation</figcaption>
-					</td>
-				  </tr>
-				</table>
+			<div style="display: flex; flex-direction: column; align-items: center;">
+					<table style="width: 100%; text-align: center; border-collapse: collapse;">
+					  <tr>
+						<td style="text-align: center;">
+						  <img src="img/part_4/bunny_falseacc/part4m0_bunny.png" width="400px"/>
+						  <figcaption>Russian Roulette M0 Accumulation</figcaption>
+						</td>
+						<td style="text-align: center;">
+						  <img src="img/part_4/bunny_falseacc/part4m1_bunny.png" width="400px"/>
+						  <figcaption>Russian Roulette M1 Accumulation</figcaption>
+						</td>
+					  </tr>
+					  <tr>
+						<td style="text-align: center;">
+						  <img src="img/part_4/bunny_falseacc/part4m2_bunny.png" width="400px"/>
+						  <figcaption>Russian Roulette M2 Accumulation</figcaption>
+						</td>
+						<td style="text-align: center;">
+						  <img src="img/part_4/bunny_falseacc/part4m3_bunny.png" width="400px"/>
+						  <figcaption>Russian Roulette M3 Accumulation</figcaption>
+						</td>
+					  </tr>
+					  <tr>
+						<td style="text-align: center;">
+						  <img src="img/part_4/bunny_falseacc/part4m4_bunny.png" width="400px"/>
+						  <figcaption>Russian Roulette M4 Accumulation</figcaption>
+						</td>
+						<td style="text-align: center;">
+						  <img src="img/part_4/bunny_falseacc/part4m5_bunny.png" width="400px"/>
+						  <figcaption>Russian Roulette M4 Accumulation</figcaption>
+						</td>
+					  </tr>
+					  <tr>
+						<td colspan="2" style="text-align: center;">
+						  <img src="img/part_4/bunny_max_ray_depth/part4m100_bunny copy.png" width="400px"/>
+						  <figcaption>Russian Roulette M100 Accumulation</figcaption>
+						</td>
+					  </tr>
+					</table>
 			</div>
 		<br><b>	Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.</b>
 		<br>When comparing the rendered views between the various sample-per-pixel rates, it becomes apparent that the greater the number of samples that we’re taking, the clearer the images that we’re rendering and the less static (aliasing) there is. While the rendering took longer every time the number of samples we were taking, the quality also scaled up with the time. In the images with sampling of 1 and 2, they’re extremely grainy and have severe static. Then, by the 16-sample render, it gets clearer and is not as apparent that there is static.
-		<div style="display: flex; flex-direction: column; align-items: center;">
-				<table style="width: 100%; text-align: center; border-collapse: collapse;">
-				  <tr>
-					<th style="padding: 10px;">False Accumulation</th>
-					<th style="padding: 10px;">Accumulation</th>
-				  </tr>
-				  <tr>
-					<td style="text-align: center;">
-					  <img src="img/part_4/sample_per_pixel/part4s1_bunny.png" width="400px"/>
-					  <figcaption>1 Sample-Per-Pixel</figcaption>
+			<div style="display: flex; flex-direction: column; align-items: center;">
+					<table style="width: 100%; text-align: center; border-collapse: collapse;">
+					  <tr>
+						<th style="padding: 10px;">False Accumulation</th>
+						<th style="padding: 10px;">Accumulation</th>
+					  </tr>
+					  <tr>
+						<td style="text-align: center;">
+						  <img src="img/part_4/sample_per_pixel/part4s1_bunny.png" width="400px"/>
+						  <figcaption>1 Sample-Per-Pixel</figcaption>
 					</td>
-					<td style="text-align: center;">
-					  <img src="img/part_4/sample_per_pixel/part4s2_bunny.png" width="400px"/>
-					  <figcaption>2 Sample-Per-Pixel</figcaption>
-					</td>
-					<td style="text-align: center;">
-					  <img src="img/part_4/sample_per_pixel/part4s4_bunny.png" width="400px"/>
-					  <figcaption>4 Sample-Per-Pixel</figcaption>
-					</td>
-				  </tr>
-				  <tr>
-					<td style="text-align: center;">
-					  <img src="img/part_4/sample_per_pixel/part4s8_bunny.png" width="400px"/>
-					  <figcaption>8 Sample-Per-Pixel</figcaption>
-					</td>
-					<td style="text-align: center;">
-					  <img src="img/part_4/sample_per_pixel/part4s16_bunny.png" width="400px"/>
-					  <figcaption>16 Sample-Per-Pixel</figcaption>
-					</td>
-					<td style="text-align: center;">
-					  <img src="img/part_4/sample_per_pixel/part4s64_bunny.png" width="400px"/>
-					  <figcaption>64 Sample-Per-Pixel</figcaption>
-					</td>
-				  </tr>
-				  <tr>
-					<td style="text-align: center;">
-					  <img src="img/part_4/sample_per_pixel/part4s1024_bunny.png" width="400px"/>
-					  <figcaption>1024 Sample-Per-Pixel</figcaption>
-					</td>
-				  </tr>
-				</table>
+						<td style="text-align: center;">
+						  <img src="img/part_4/sample_per_pixel/part4s2_bunny.png" width="400px"/>
+						  <figcaption>2 Sample-Per-Pixel</figcaption>
+						</td>
+					  </tr>
+					  <tr>
+						<td style="text-align: center;">
+						  <img src="img/part_4/sample_per_pixel/part4s4_bunny.png" width="400px"/>
+						  <figcaption>4 Sample-Per-Pixel</figcaption>
+						</td>
+						<td style="text-align: center;">
+						  <img src="img/part_4/sample_per_pixel/part4s8_bunny.png" width="400px"/>
+						  <figcaption>8 Sample-Per-Pixel</figcaption>
+						</td>
+					  </tr>
+					  <tr>
+						<td style="text-align: center;">
+						  <img src="img/part_4/sample_per_pixel/part4s16_bunny.png" width="400px"/>
+						  <figcaption>16 Sample-Per-Pixel</figcaption>
+						</td>
+						<td style="text-align: center;">
+						  <img src="img/part_4/sample_per_pixel/part4s64_bunny.png" width="400px"/>
+						  <figcaption>64 Sample-Per-Pixel</figcaption>
+						</td>
+					  </tr>
+					  <tr>
+						<td colspan="2" style="text-align: center;">
+						  <img src="img/part_4/sample_per_pixel/part4s1024_bunny.png" width="400px"/>
+						  <figcaption>1024 Sample-Per-Pixel</figcaption>
+						</td>
+					  </tr>
+					</table>
 			</div>
 		<h2>Part 5: Adaptive Sampling</h2>
 		<b>Explain adaptive sampling. Walk through your implementation of the adaptive sampling.</b>
