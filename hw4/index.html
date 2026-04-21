@@ -443,34 +443,70 @@
           When varying <code>ks</code>, a higher spring constant makes the cloth stiffer, so it resists
           bending and stretching, causing broader, sharper folds and less sagging. A lower
           <code>ks</code> makes the cloth more flexible, so it crumples in on itself more easily,
-          creating deeper draping folds and a bumpier overall shape as it falls onto itself.
+          creating deeper draping folds and a bumpier overall shape as it falls onto itself. In this simulation of the cloth, the cloth oscillates more when ks is lower.
         </p>
-        <div class="gallery">
+		<h4>Effects of Density</h4>
+        <div class="gallery two-up">
           <figure>
-            <img src="assets/density0.5k5000/Screenshot 2026-04-17 at 1.02.24 PM.png" alt="Low density self-collision result" />
+            <img src="assets/density0.5k5000/Screenshot 2026-04-17 at 1.01.48 PM.png" alt="Low density self-collision result" />
             <figcaption>
-              Low density, <code>0.5 g/cm^2</code>, <code>ks = 5000</code>: a lighter cloth with softer,
+              Low density, Early, <code>density = 0.5 g/cm^2</code>, <code>ks = 5000</code>: a lighter cloth with softer,
               gentler folds.
             </figcaption>
           </figure>
-          <figure>
-            <img src="assets/density500k5000/Screenshot 2026-04-17 at 1.00.43 PM.png" alt="High density self-collision result" />
+		  <figure>
+            <img src="assets/density0.5k5000/Screenshot 2026-04-17 at 1.02.24 PM.png" alt="Low density self-collision result" />
             <figcaption>
-              High density, <code>500 g/cm^2</code>, <code>ks = 5000</code>: a heavier cloth that collapses
+              Low density, End, <code>density = 0.5 g/cm^2</code>, <code>ks = 5000</code>: a lighter cloth with softer,
+              gentler folds.
+            </figcaption>
+          </figure>
+		  </div>
+		  <div class="gallery two-up">
+          <figure>
+            <img src="assets/density500k5000/Screenshot 2026-04-17 at 12.59.25 PM.png" alt="High density self-collision result" />
+            <figcaption>
+              High density, Early, <code>density = 500 g/cm^2</code>, <code>ks = 5000</code>: a heavier cloth that collapses
               into a denser, more compressed pile.
             </figcaption>
           </figure>
-          <figure>
-            <img src="assets/density15k50/Screenshot 2026-04-17 at 1.08.02 PM.png" alt="Low ks self-collision result" />
+		  <figure>
+            <img src="assets/density500k5000/Screenshot 2026-04-17 at 1.00.43 PM.png" alt="High density self-collision result" />
             <figcaption>
-              Low <code>ks = 500</code>, density <code>15 g/cm^2</code>: more flexible cloth with deeper,
+              High density, End, <code>density = 500 g/cm^2</code>, <code>ks = 5000</code>: a heavier cloth that collapses
+              into a denser, more compressed pile.
+            </figcaption>
+          </figure>
+		  </div>
+		  <h4>Effects of KS</h4>
+		  <div class = "gallery two-up">
+          <figure>
+            <img src="assets/density15k50/Screenshot 2026-04-17 at 1.07.23 PM.png" alt="Low ks self-collision result" />
+            <figcaption>
+              Early Low <code>ks = 50</code>, density <code>15 g/cm^2</code>: more flexible cloth with deeper,
               tighter wrinkles.
             </figcaption>
           </figure>
+		  <figure>
+            <img src="assets/density15k50/Screenshot 2026-04-20 at 9.39.48 PM.png" alt="Low ks self-collision result" />
+            <figcaption>
+              End Low <code>ks = 50</code>, density <code>15 g/cm^2</code>: more flexible cloth with deeper,
+              tighter wrinkles.
+            </figcaption>
+          </figure>
+		  </div>
+		  <div class = "gallery two-up">
           <figure>
+            <img src="assets/density15k50000/Screenshot 2026-04-17 at 1.03.43 PM.png" alt="High ks self-collision result" />
+            <figcaption>
+              Early High <code>ks = 50000</code>, density <code>15 g/cm^2</code>: stiffer cloth with broader,
+              smoother folds.
+            </figcaption>
+          </figure>
+		  <figure>
             <img src="assets/density15k50000/Screenshot 2026-04-17 at 1.04.04 PM.png" alt="High ks self-collision result" />
             <figcaption>
-              High <code>ks = 50000</code>, density <code>15 g/cm^2</code>: stiffer cloth with broader,
+              End High <code>ks = 50000</code>, density <code>15 g/cm^2</code>: stiffer cloth with broader,
               smoother folds.
             </figcaption>
           </figure>
