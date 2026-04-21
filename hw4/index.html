@@ -1,109 +1,482 @@
-<html>
-	<head>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-		<style>
-			h1 {
-				text-align: center;
-			}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS184 Homework 4 Write-Up</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --surface: #fffdf8;
+        --surface-strong: #f0e7d7;
+        --text: #2b241d;
+        --muted: #6b5c4d;
+        --accent: #a85a2a;
+        --border: #dccbb7;
+        --shadow: 0 18px 40px rgba(64, 42, 23, 0.08);
+      }
 
-			.container {
-				margin: 0 auto;
-				padding: 60px 20%;
-			}
+      * {
+        box-sizing: border-box;
+      }
 
-			figure {
-				text-align: center;
-			}
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(234, 210, 194, 0.9), transparent 28%),
+          linear-gradient(180deg, #f7f2e8 0%, #f4f1ea 100%);
+        line-height: 1.65;
+      }
 
-			img {
-				display: inline-block;
-			}
+      a {
+        color: var(--accent);
+      }
 
-			body {
-				font-family: 'Inter', sans-serif;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-		<h1>CS184/284A Spring 2025 Homework 4 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+	  img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 4 / 3; /* This forces a uniform shape (e.g., 4:3 or 16:9) */
+		object-fit: cover;   /* This ensures the image fills the area without stretching */
+		border-radius: 16px;
+	  }
 
-		<br>
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+      .container {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 48px 0 72px;
+      }
 
-		<br>
+      .hero {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: 40px;
+        box-shadow: var(--shadow);
+        margin-bottom: 28px;
+      }
 
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+      .hero h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 4vw, 3.3rem);
+        line-height: 1.1;
+      }
 
-		<figure>
-			<img src="clothsim.png" alt="Cloth draped over sphere" style="width:70%"/>
-			<figcaption>You can add images with captions!</figcaption>
-		</figure>
+      .subtitle {
+        font-size: 1.05rem;
+        color: var(--muted);
+        margin-bottom: 18px;
+      }
 
-		<!--
-		We've already added one heading per part, to make your write-up as navigable when grading. Please fit your write-up within these sections!
-		-->
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 14px;
+        margin-top: 22px;
+      }
 
-		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+      .meta-card {
+        padding: 16px 18px;
+        background: var(--surface-strong);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+      }
 
-		<h2>Part 1: Masses and springs</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      .meta-card strong {
+        display: block;
+        margin-bottom: 4px;
+      }
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
-		<div style="display: flex; flex-direction: column; align-items: center;">
-			<table style="width: 100%; text-align: center; border-collapse: collapse;">
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			</table>
-		</div>
+      .section {
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: var(--shadow);
+        margin-bottom: 24px;
+      }
 
-		<h2>Part 2: Simulation via numerical integration</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      h2 {
+        margin: 0 0 16px;
+        font-size: 1.6rem;
+      }
 
-		<h2>Part 3: Handling collisions with other objects</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      h3 {
+        margin: 24px 0 10px;
+        font-size: 1.1rem;
+      }
 
-		<h2>Part 4: Handling self-collisions</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      p {
+        margin: 0 0 14px;
+      }
 
-		<h2>Part 5: Shaders</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
 
-		<h2>(Optional) Part 6: Extra Credit - Additional cloth simulation features!</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
-		</div>
-	</body>
+      .gallery.two-up {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
+
+      figure {
+        margin: 0;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 12px;
+      }
+
+      figcaption {
+        font-size: 0.95rem;
+        color: var(--muted);
+        margin-top: 10px;
+      }
+
+      .note {
+        padding: 14px 16px;
+        border-left: 4px solid var(--accent);
+        background: #fff7f1;
+        border-radius: 10px;
+        color: var(--muted);
+      }
+
+      @media (max-width: 720px) {
+        .hero,
+        .section {
+          padding: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <section class="hero">
+        <h1>CS184/284A Homework 4: Cloth Simulation</h1>
+        <p class="subtitle">
+          A write-up covering mass-spring cloth simulation, numerical integration, and self-collision behavior.
+        </p>
+        <div class="meta">
+          <div class="meta-card">
+            <strong>Names</strong>
+            Sophia Prakasa and Kathleen Hua
+          </div>
+          <div class="meta-card">
+            <strong>Webpage</strong>
+            <a href="https://cal-cs184-student.github.io/hw-webpages-kathleenhua/hw4/index.html">
+              cal-cs184-student.github.io/hw-webpages-kathleenhua/hw4/index.html
+            </a>
+          </div>
+          <div class="meta-card">
+            <strong>Repository</strong>
+            <a href="https://github.com/cal-cs184-student/hw-webpages-kathleenhua">
+              github.com/cal-cs184-student/hw-webpages-kathleenhua
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>
+          In this homework, we built a cloth simulator using a mass-spring model. We started by
+          constructing the cloth as a grid of point masses connected by structural, shearing, and
+          bending springs. Then we simulated the cloth's motion over time with external forces,
+          Hooke's law spring forces, Verlet integration, and Provot-style constraints to keep the
+          springs from stretching too far in a single step.
+        </p>
+        <p>
+          We also implemented self-collision handling with spatial hashing so the cloth can fold onto
+          itself instead of passing through itself. One of the most interesting parts of the homework
+          was seeing how much the physical parameters affect the final look. Changing <code>ks</code>,
+          density, and damping made the cloth feel dramatically softer, stiffer, lighter, or heavier,
+          which made the connection between the math and the rendered motion feel very clear.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Part 1: Masses and Springs</h2>
+        <p>
+          We represent the cloth as a grid of point masses stored in row-major order. Depending on the
+          cloth orientation, the point masses are laid out either in the <code>xz</code> plane or in
+          the <code>xy</code> plane with a small random offset in <code>z</code>. We also mark the
+          pinned masses using the pinned indices provided by the scene so selected points stay fixed
+          during simulation.
+        </p>
+        <p>
+          After building the grid of masses, we connect nearby masses with springs. Structural springs
+          connect left and upper neighbors, shearing springs connect the two diagonal upper neighbors,
+          and bending springs connect masses that are two units away horizontally or vertically. The
+          wireframe screenshots below show how the cloth structure changes as different constraint
+          types are enabled or disabled.
+        </p>
+        <div class="gallery two-up">
+          <figure>
+            <img src="assets/part1viewingangle.png" alt="First viewing angle for pinned2 wireframe screenshots" />
+            <figcaption>
+              First viewing angle used for <code>scene/pinned2.json</code> so the wireframe structure.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part1viewingangle2.png" alt="Second viewing angle for pinned2 wireframe screenshots" />
+            <figcaption>
+              Second viewing angle of <code>scene/pinned2.json</code> showing the same wireframe structure.
+            </figcaption>
+          </figure>
+        </div>
+        <div class="gallery">
+          <figure>
+            <img src="assets/part1_noShearing.png" alt="Wireframe without shearing constraints" />
+            <figcaption>
+              <code>scene/pinned2.json</code> without shearing constraints.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part1_onlyShearing.png" alt="Wireframe with only shearing constraints" />
+            <figcaption>
+              <code>scene/pinned2.json</code> with only shearing constraints enabled.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part1_all.png" alt="Wireframe with all constraints" />
+            <figcaption>
+              <code>scene/pinned2.json</code> with all constraints enabled.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Part 2: Simulation via Numerical Integration</h2>
+        <!-- <p>
+          In <code>simulate</code>, we first reset the force accumulator on every point mass. We then
+          compute the total external force by summing the external accelerations and multiplying by the
+          point mass mass, and apply that to each mass. After that, we iterate over the springs and
+          apply Hooke's law to add spring forces, skipping any spring type whose constraint is
+          currently disabled. For bending springs, we use a smaller effective stiffness so that they
+          resist folding less strongly than structural and shearing springs.
+        </p> -->
+        <!-- <p>
+          Once the forces are accumulated, we update each unpinned point mass using Verlet integration:
+          the new position is computed from the current position, the previous position, the damping
+          factor, and the current acceleration scaled by <code>delta_t^2</code>. Finally, we enforce
+          the Provot deformation constraint by checking each spring and correcting the connected point
+          masses whenever the spring has stretched to more than 10% above its rest length.
+        </p> -->
+
+        <h3>Effects of changing <code>ks</code></h3>
+        <p>
+          With a very low spring constant, such as <code>ks = 5</code> N/m, the cloth is much more
+          flexible. It becomes wrinkly very quickly, develops lots of small creases, and sags more as
+          it falls. With a high spring constant, such as <code>ks = 50000</code> N/m, the cloth resists
+          stretching much more, so the motion looks smoother and the folds are few to none, looking inflexible.
+        </p>
+
+        <div class="gallery two-up">
+          <figure>
+            <img src="/assets/part2/effect_ks/density15ks5/ds15_ks51.png" alt="Low ks cloth result" />
+            <figcaption>
+              LOW KS = 5, Early Timestep
+            </figcaption>
+          </figure>
+		  <figure>
+            <img src="/assets/part2/effect_ks/density15ks5/ds15_ks52.png" alt="Low ks cloth result" />
+            <figcaption>
+              LOW KS = 5, Later Timestep
+            </figcaption>
+          </figure>
+		  </div>
+		  <div class="gallery two-up">
+          <figure>
+            <img src="/assets/part2/effect_ks/density15ks50000/ds15_ks500001.png" alt="Default ks cloth result" />
+            <figcaption>
+              HIGH KS = 50000, Early Timestep
+            </figcaption>
+          </figure>
+		  <figure>
+            <img src="/assets/part2/effect_ks/density15ks50000/ds15_ks500002.png" alt="Default ks cloth result" />
+            <figcaption>
+              HIGH KS = 50000, Later Timestep
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3>Effects of changing density</h3>
+        <p>
+          At low density, such as <code>0.5 g/cm^2</code>, the cloth does not move as dramatically and
+          stays relatively flat, with fewer to no strong folds and less shadowing. At high density, such as
+          <code>500 g/cm^2</code>, the cloth behaves like a much heavier sheet and collapses more
+          forcefully, creating darker and more compressed folds that look more extreme. It also moves for more time as the cloth settles.
+        </p>
+
+        <div class="gallery two-up">
+          <figure>
+            <img src="/assets/part2/effect_dens/density0.5ks5000/ds05_ks50001.png" alt="Low density cloth result" />
+            <figcaption>
+              LOW DENSITY = 0.5, Early Timestep
+            </figcaption>
+          </figure>
+		  <figure>
+            <img src="/assets/part2/effect_dens/density0.5ks5000/ds05_ks50002.png" alt="Low density cloth result" />
+            <figcaption>
+              LOW DENSITY = 0.5, Later Timestep
+            </figcaption>
+          </figure>
+		  </div>
+		  <div class="gallery two-up">
+          <figure>
+            <img src="/assets/part2/effect_dens/density500ks5000/ds500_ks50001.png" alt="High density cloth result" />
+            <figcaption>
+              HIGH DENSITY = 500, Early Timestep
+            </figcaption>
+          </figure>
+		  <figure>
+            <img src="/assets/part2/effect_dens/density500ks5000/ds500_ks50001.png" alt="High density cloth result" />
+            <figcaption>
+              HIGH DENSITY = 500, Later Timestep
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3>Effects of changing damping</h3>
+        <p>
+          With very low damping, close to <code>0%</code>, the cloth swings aggressively and keeps oscillating
+          for much longer because little motion is lost between steps. With high damping, the cloth falls more slowly and settles more quickly, acting super inflexible.
+        </p>
+
+        <div class="gallery two-up">
+          <figure>
+            <img src="/assets/part2/effect_damping/dampingmax.png" alt="High density cloth result" />
+            <figcaption>
+              MAX DAMPING = 1.0, Early Timestep
+            </figcaption>
+          </figure>
+		  <figure>
+            <img src="/assets/part2/effect_damping/dampingmin.png" alt="High density cloth result" />
+            <figcaption>
+              MIN(ish) DAMPING = 0.023, Early Timestep
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Part 3: Handling Collisions with Other Objects</h2>
+        <p class="note">
+          Part 3 has not been implemented yet, so this section is intentionally left incomplete for now.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Part 4: Handling Self-Collisions</h2>
+        <p>
+          We used spatial hashing as the foundation of handling self collisions. We partition the space
+          into boxes where the dimensions are based on the cloth resolution. Each point mass position is
+          then snapped to its containing box and those box coordinates are combined into a hash key.
+          Then we build <code>build_spatial_map</code>, where we loop through the point masses, hash
+          each position, and then insert the point mass into the bucket for that box in the hash table
+          to group nearby masses together.
+        </p>
+        <p>
+          Then, in <code>self_collide</code>, we hash the current point to get the hash key to find the
+          bucket of other nearby candidates. We iterate through the point masses in the same bucket: if
+          the difference is less than <code>2 * thickness</code>, we update the point mass's correction
+          vector such that the resulting pair would be <code>2 * thickness</code> distance apart. Then
+          we sum up all of the correction vectors, average them over the number of collisions, and scale
+          the result by <code>1 / simulation_steps</code> to get the final correction to the point mass
+          position.
+        </p>
+
+        <h3>Cloth folding sequence</h3>
+        <p>
+          The screenshots below show an early self-collision, a middle stage where the folds stack onto
+          one another, and a later state where the cloth has settled into a more restful folded shape.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img src="assets/density15k5000/Screenshot 2026-04-17 at 12.50.32 PM.png" alt="Early self-collision" />
+            <figcaption>
+              Early self-collision: the lower portion of the cloth first bunches up and begins to fold.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/density15k5000/Screenshot 2026-04-17 at 12.51.25 PM.png" alt="Middle self-collision stage" />
+            <figcaption>
+              Mid fall: several layers of cloth are folding over each other as the sheet collapses.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/density15k5000/Screenshot 2026-04-17 at 12.52.02 PM.png" alt="Restful self-collision state" />
+            <figcaption>
+              Later state: the cloth reaches a more restful stacked configuration, though it can still be slightly bouncy.
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3>Effects of density and <code>ks</code></h3>
+        <p>
+          When changing the density, increasing density makes the cloth heavier, so it falls faster and
+          with more momentum, producing stronger folds and a more forceful collapse before settling.
+          Lower density means the cloth is lighter, so it falls downward more gently and tends to form
+          softer, less dramatic folds.
+        </p>
+        <p>
+          When varying <code>ks</code>, a higher spring constant makes the cloth stiffer, so it resists
+          bending and stretching, causing broader, sharper folds and less sagging. A lower
+          <code>ks</code> makes the cloth more flexible, so it crumples in on itself more easily,
+          creating deeper draping folds and a bumpier overall shape as it falls onto itself.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img src="assets/density0.5k5000/Screenshot 2026-04-17 at 1.02.24 PM.png" alt="Low density self-collision result" />
+            <figcaption>
+              Low density, <code>0.5 g/cm^2</code>, <code>ks = 5000</code>: a lighter cloth with softer,
+              gentler folds.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/density500k5000/Screenshot 2026-04-17 at 1.00.43 PM.png" alt="High density self-collision result" />
+            <figcaption>
+              High density, <code>500 g/cm^2</code>, <code>ks = 5000</code>: a heavier cloth that collapses
+              into a denser, more compressed pile.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/density15k50/Screenshot 2026-04-17 at 1.08.02 PM.png" alt="Low ks self-collision result" />
+            <figcaption>
+              Low <code>ks = 500</code>, density <code>15 g/cm^2</code>: more flexible cloth with deeper,
+              tighter wrinkles.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/density15k50000/Screenshot 2026-04-17 at 1.04.04 PM.png" alt="High ks self-collision result" />
+            <figcaption>
+              High <code>ks = 50000</code>, density <code>15 g/cm^2</code>: stiffer cloth with broader,
+              smoother folds.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Part 5: Shaders</h2>
+        <p class="note">
+          Part 5 has not been implemented yet, so this section is intentionally left incomplete for now.
+        </p>
+      </section>
+    </main>
+  </body>
 </html>
