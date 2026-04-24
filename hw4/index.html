@@ -166,9 +166,6 @@
     <main class="container">
       <section class="hero">
         <h1>CS184/284A Homework 4: Cloth Simulation</h1>
-        <p class="subtitle">
-          A write-up covering mass-spring cloth simulation, numerical integration, and self-collision behavior.
-        </p>
         <div class="meta">
           <div class="meta-card">
             <strong>Names</strong>
@@ -261,21 +258,6 @@
 
       <section class="section">
         <h2>Part 2: Simulation via Numerical Integration</h2>
-        <!-- <p>
-          In <code>simulate</code>, we first reset the force accumulator on every point mass. We then
-          compute the total external force by summing the external accelerations and multiplying by the
-          point mass mass, and apply that to each mass. After that, we iterate over the springs and
-          apply Hooke's law to add spring forces, skipping any spring type whose constraint is
-          currently disabled. For bending springs, we use a smaller effective stiffness so that they
-          resist folding less strongly than structural and shearing springs.
-        </p> -->
-        <!-- <p>
-          Once the forces are accumulated, we update each unpinned point mass using Verlet integration:
-          the new position is computed from the current position, the previous position, the damping
-          factor, and the current acceleration scaled by <code>delta_t^2</code>. Finally, we enforce
-          the Provot deformation constraint by checking each spring and correcting the connected point
-          masses whenever the spring has stretched to more than 10% above its rest length.
-        </p> -->
 
         <h3>Effects of changing <code>ks</code></h3>
         <p>
@@ -381,9 +363,81 @@
 
       <section class="section">
         <h2>Part 3: Handling Collisions with Other Objects</h2>
-        <p class="note">
-          Part 3 has not been implemented yet, so this section is intentionally left incomplete for now.
+        <p>
+          For sphere collisions, we check whether a point mass has moved inside the sphere by comparing
+          the distance from the point mass to the sphere center against the sphere radius. If the point
+          mass is inside, we compute the tangent point on the sphere by taking the direction from the
+          sphere origin to the point mass, normalizing it, and scaling it by the radius. That gives us
+          the point on the sphere surface where the mass should lie instead of penetrating the object.
         </p>
+        <p>
+          We then compute a correction vector from the point mass's <code>last_position</code> to that
+          tangent point and apply only <code>(1 - friction)</code> of that correction. Using
+          <code>last_position</code> is important because it preserves the sense that the mass moved into
+          the sphere during the last step and is now being pushed back out along a physically plausible
+          path, instead of simply teleporting from its current position. In practice, this makes the
+          cloth slide and drape across the sphere much more naturally.
+        </p>
+        <p>
+          Plane collisions are handled similarly, but with a signed distance test against the plane.
+          When a point mass crosses to the forbidden side of the plane, we intersect the segment from
+          <code>last_position</code> to the current position with the plane, then offset the corrected
+          position slightly along the plane normal by the cloth thickness so the point mass rests just
+          above the surface rather than repeatedly clipping through it. As with the sphere, friction is
+          used to damp the correction so the cloth can settle instead of jittering.
+        </p>
+
+        <h3>Cloth resting on <code>scene/sphere.json</code></h3>
+        <p>
+          The screenshots below show the shaded cloth in its resting state on the sphere with
+          <code>ks = 500</code>, <code>ks = 5000</code>, and <code>ks = 50000</code>.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img src="assets/part3/part3_ks500.png" alt="Shaded cloth resting on a sphere with ks 500" />
+            <figcaption>
+              <code>ks = 500</code>: the cloth is very soft, so it falls quickly and hugs the sphere
+              tightly with many deep folds.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part3/part3_ks5000.png" alt="Shaded cloth resting on a sphere with ks 5000" />
+            <figcaption>
+              <code>ks = 5000</code>: the default value gives the most balanced result, with smooth
+              draping and a natural-looking amount of stiffness.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part3/part3_ks50000.png" alt="Shaded cloth resting on a sphere with ks 50000" />
+            <figcaption>
+              <code>ks = 50000</code>: the cloth resists bending and stretching much more strongly, so
+              it bridges over the sphere more and looks stiffer and less natural.
+            </figcaption>
+          </figure>
+        </div>
+        <p>
+          Comparing the three results, lower <code>ks</code> makes the cloth much more compliant, so it
+          conforms closely to the sphere and develops sharper vertical folds. The default
+          <code>ks = 5000</code> looks the most believable because it still drapes around the sphere
+          while maintaining some structural support. At very high <code>ks</code>, the cloth becomes too
+          resistant to deformation, so the silhouette looks more tent-like and the folds appear broader,
+          stiffer, and somewhat jagged.
+        </p>
+
+        <h3>Cloth resting on the plane</h3>
+        <p>
+          Below is the shaded cloth peacefully resting on the plane. For this screenshot, we used a
+          custom textured cloth for some school pride and whimsy.
+        </p>
+        <div class="gallery two-up">
+          <figure>
+            <img src="assets/part3/part3_plane.png" alt="Shaded cloth resting on a plane" />
+            <figcaption>
+              Shaded cloth at rest on the plane after collision handling keeps the cloth above the
+              surface and lets it settle without passing through.
+            </figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="section">
@@ -515,9 +569,273 @@
 
       <section class="section">
         <h2>Part 5: Shaders</h2>
-        <p class="note">
-          Part 5 has not been implemented yet, so this section is intentionally left incomplete for now.
+        <p>
+          A shader program is a small program that runs on the GPU as part of the graphics pipeline.
+          Instead of computing every pixel on the CPU, we send geometry and material information to the
+          GPU and let thousands of shader invocations run in parallel. In this homework, the two main
+          programmable stages were the vertex shader and the fragment shader.
         </p>
+        <p>
+          The vertex shader runs once per vertex. Its job is to transform vertex positions into clip
+          space for rasterization and to prepare data that later stages need, such as world-space
+          positions, normals, tangents, and UV coordinates. After that, the rasterizer interpolates
+          those outputs across each triangle. The fragment shader then runs on each fragment and uses
+          the interpolated attributes together with uniforms like light position, camera position, and
+          textures to compute the final color. That pairing is what makes lighting, texturing,
+          reflections, and bump effects possible in real time.
+        </p>
+
+        <h3>Blinn-Phong shading</h3>
+        <p>
+          The Blinn-Phong model adds together three lighting terms: ambient, diffuse, and specular.
+          Ambient is a small constant base illumination so the object is never completely black.
+          Diffuse depends on how aligned the light direction is with the surface normal, so surfaces
+          facing the light appear brighter. Specular uses the half-vector between the light direction
+          and the view direction to create concentrated highlights that make the material look glossy.
+          Together, these three terms produce a simple but convincing approximation of how light behaves
+          on many everyday materials.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img src="assets/part5/part5_ambient.png" alt="Ambient-only Blinn-Phong result" />
+            <figcaption>
+              Ambient only: the cloth is uniformly dim because this term provides constant background
+              illumination independent of viewing direction.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_diffuse.png" alt="Diffuse-only Blinn-Phong result" />
+            <figcaption>
+              Diffuse only: brightness depends on the angle between the light and the normal, so the
+              broad shape of the folds reads clearly.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_specular.png" alt="Specular-only Blinn-Phong result" />
+            <figcaption>
+              Specular only: most of the cloth stays dark except for concentrated highlights where the
+              half-vector aligns with the surface normal.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_blinnphong.png" alt="Full Blinn-Phong shading result" />
+            <figcaption>
+              Full Blinn-Phong model: combining all three terms gives the cloth both readable form and
+              glossy highlights.
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3>Texture mapping</h3>
+        <p>
+          For texture mapping, the fragment shader samples a 2D texture using the interpolated UV
+          coordinates and outputs that sampled color. We used our own custom texture rather than the
+          default one, which wraps a grayscale portrait image across the draped cloth. Because the UVs
+          are interpolated smoothly, the image follows the folds of the fabric and stretches with the
+          geometry rather than appearing as a flat overlay.
+          <br> Shoutout to the goat Sriram
+        </p>
+        <div class="gallery two-up">
+          <figure>
+            <img src="assets/part5/part5_texture.png" alt="Custom texture mapped onto the cloth" />
+            <figcaption>
+              Custom texture mapping result using our modified texture asset on the cloth.
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3>Bump and displacement mapping</h3>
+        <p>
+          For both bump and displacement mapping, we used the same non-default tiled fabric-like height
+          texture. Bump mapping only changes the shading normal, so it creates the illusion of small
+          surface detail without changing the actual geometry. Displacement mapping goes further by
+          moving vertices along their normals in the vertex shader, so the silhouette and the geometry
+          itself become visibly altered.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img src="assets/part5/part5_clothBump.png" alt="Bump mapping on cloth" />
+            <figcaption>
+              Bump mapping on the cloth: the woven square pattern appears through lighting variation even
+              though the cloth mesh itself is unchanged.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_sphereBump.png" alt="Bump mapping on sphere" />
+            <figcaption>
+              Bump mapping on the sphere with the same texture: the surface looks embossed, but the
+              outline of the sphere remains smooth.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_displacement.png" alt="Displacement mapping on sphere" />
+            <figcaption>
+              Displacement mapping on the sphere: the same texture now modifies the underlying geometry,
+              producing a visibly uneven silhouette and larger-scale ridges.
+            </figcaption>
+          </figure>
+        </div>
+        <p>
+          Comparing the two approaches, bump mapping is cheaper and works well for fine detail because
+          it only perturbs normals. The lighting changes make the material look detailed, but the object
+          still has the same true shape. Displacement mapping is more expensive, but it creates a much
+          stronger effect because the mesh itself is pushed outward and inward by the height field. This
+          means the ridges on the displaced sphere feel much more physical, especially around the outer
+          contour.
+        </p>
+        <p>
+          Mesh coarseness matters much more for displacement than for bump mapping. With a coarse sphere
+          mesh such as <code>-o 16 -a 16</code>, bump mapping still looks reasonably detailed because it
+          only depends on the fragment normals, but displacement has fewer vertices to move and therefore
+          looks chunkier and more faceted. With a finer sphere mesh such as <code>-o 128 -a 128</code>,
+          displacement can represent the height texture much more faithfully and produces smoother,
+          denser geometric variation. In our screenshots, the high-resolution displaced sphere shows more
+          continuous ridges, while the lower-resolution version keeps the same general pattern but with a
+          more polygonal appearance.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img src="assets/part5/part5_bumpLow.png" alt="Low-resolution sphere with bump mapping" />
+            <figcaption>
+              Bump mapping with a lower-resolution sphere mesh: the shading detail remains visible even
+              though the geometry is coarse. <i>-o 16 -a 16</i>
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_bumpHigh.png" alt="High-resolution sphere with bump mapping" />
+            <figcaption>
+              Bump mapping with a higher-resolution sphere mesh: visually similar overall, since the
+              main effect is still coming from perturbed normals. <i>-o 128 -a 128</i>
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_displacementLow.png" alt="Low-resolution sphere with displacement mapping" />
+            <figcaption>
+              Displacement mapping with a lower-resolution sphere mesh: the height pattern appears
+              blockier because there are fewer vertices available to move. <i>-o 16 -a 16</i>
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_displacementHigh.png" alt="High-resolution sphere with displacement mapping" />
+            <figcaption>
+              Displacement mapping with a higher-resolution sphere mesh: the displaced geometry becomes
+              smoother and captures the texture more faithfully. <i>-o 128 -a 128</i>
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3>Environment-mapped reflections</h3>
+        <p>
+          For the mirror shader, we computed the outgoing view direction from the camera to the fragment,
+          reflected it across the surface normal, and sampled the cubemap in that reflected direction.
+          This makes the material behave like a polished mirror, so the environment becomes warped across
+          the cloth and sphere according to their changing normals.
+        </p>
+        <div class="gallery two-up">
+          <figure>
+            <img src="assets/part5/part5_mirrorCloth.png" alt="Mirror shader on cloth" />
+            <figcaption>
+              Mirror shader on the cloth: the cubemap reflection stretches along the folds and creates a
+              highly reflective metallic look.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/part5/part5_mirrorSphere.png" alt="Mirror shader on sphere" />
+            <figcaption>
+              Mirror shader on the sphere: the reflected environment appears smoother and more regular
+              because of the sphere's simpler curvature.
+            </figcaption>
+          </figure>
+        </div>
+
+      </section>
+
+      <section class="section">
+        <h2>Extra Credit</h2>
+        <h3>Custom shader</h3>
+        <p>
+          For the custom shader, we implemented a procedural animated "Sci-Fi Hologram" effect in
+          <code>Custom.vert</code> and <code>Custom.frag</code>. Instead of trying to make the cloth
+          look physically realistic, this shader was designed to look like an active projected
+          forcefield: bright at the silhouette, partially transparent through the middle, and constantly
+          animated with moving bands of light.
+        </p>
+        <p>
+          The first main ingredient was a Fresnel-style edge glow. We computed the dot product between
+          the surface normal and the camera view direction, then inverted that value with
+          <code>1.0 - dot(n, v)</code> and raised it to a power to sharpen the effect. This makes
+          fragments facing the camera stay relatively dim while fragments near the silhouette become much
+          brighter, which is what gives the cloth its hologram-like rim lighting. Because this depends on
+          the current view direction, the glow updates naturally as the camera moves around the mesh.
+        </p>
+        <p>
+          The second ingredient was procedural animation using time-based sine waves. We passed a
+          <code>u_time</code> uniform from the C++ render loop using <code>glfwGetTime()</code>, and in
+          the fragment shader we combined that time value with the world-space <code>y</code>-position
+          of each fragment inside a sine function. This created tightly packed horizontal scanlines that
+          travel upward across the cloth over time. Since the pattern is generated mathematically, there
+          was no need for a texture map: the animation comes entirely from the shader logic itself.
+        </p>
+        <p>
+          Finally, we combined these two effects by multiplying the moving scanline signal by the
+          Fresnel glow mask and using that result to drive the emitted green color and transparency.
+          That way, the animated bands show up most strongly near the outer contour of the cloth instead
+          of uniformly everywhere. The final result is much more stylized than the physically-inspired
+          shaders in Part 5 and demonstrates how shaders can also be used for expressive non-photoreal
+          effects, not just realistic lighting models.
+        </p>
+        <div class="gallery two-up">
+          <figure>
+            <img src="assets/part5/part5_custom.gif" alt="Animated custom shader on cloth" />
+            <figcaption>
+              Extra credit custom shader with animated green highlights moving across the cloth.
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3>Aerodynamic wind and flag simulation</h3>
+        <p>
+          For a second extra credit feature, we implemented a spatially varying aerodynamic wind force
+          to make the cloth behave more like a real flag. In the baseline simulator, external forces
+          such as gravity are applied uniformly to every point mass, which ignores how wind should
+          interact with the cloth's changing orientation. In reality, wind depends on surface area: a
+          patch of cloth facing directly into the flow should catch much more force than a patch aligned
+          nearly parallel to it.
+        </p>
+        <p>
+          To model this, we applied wind on a per-triangle basis inside <code>simulate</code> by
+          iterating over <code>clothMesh-&gt;triangles</code>. For each triangle, we computed the cross
+          product of two triangle edges. That cross product gives an unnormalized face normal whose
+          magnitude is proportional to the triangle's area, so it naturally captures both orientation
+          and exposed surface size. We then took the dot product between that face normal and a dynamic
+          wind velocity vector to determine how strongly the wind was pushing on the triangle.
+        </p>
+        <p>
+          The aerodynamic force on each face was computed using
+          <code>F_aero = c_drag * dot(n_face, v_wind) * n_face</code>. If the dot product was negative,
+          meaning the wind was striking the back side of the triangle, we flipped the normal before
+          applying the force so the cloth would still respond consistently to the incoming airflow. Once
+          the total face force was computed, we divided it evenly among the triangle's three point
+          masses and accumulated it into their force totals for that simulation step.
+        </p>
+        <p>
+          To keep the flag from just stretching into one steady shape, we also added spatial variance to
+          the wind field. By sampling sine and cosine waves based on the vertices' <code>x</code> and
+          <code>y</code> coordinates, we generated a fluctuating <code>z</code>-direction component in
+          the wind. This adds small turbulent differences across the cloth surface, which causes the
+          fabric to ripple, shed waves, and flap much more naturally. To showcase the effect, we created
+          a custom <code>flag.json</code> scene that pins the cloth vertically along its left edge so it
+          behaves like a flag attached to a pole.
+        </p>
+        <div class="gallery two-up">
+          <figure>
+            <img src="assets/ec_wind.gif" alt="Aerodynamic wind simulation on a flag cloth" />
+            <figcaption>
+              Extra credit aerodynamic wind force with spatial variation, shown on a custom flag scene
+              pinned along the left edge.
+            </figcaption>
+          </figure>
+        </div>
       </section>
     </main>
   </body>
