@@ -30,6 +30,7 @@
         margin: 0;
         font-family: 'Inter', sans-serif;
         color: var(--text);
+        font-size: 15px;
         background:
           radial-gradient(circle at top left, rgba(234, 210, 194, 0.9), transparent 28%),
           linear-gradient(180deg, #f7f2e8 0%, #f4f1ea 100%);
@@ -53,23 +54,23 @@
       }
 
       .container {
-        width: min(1120px, calc(100% - 32px));
+        width: min(1020px, calc(100% - 28px));
         margin: 0 auto;
-        padding: 48px 0 72px;
+        padding: 32px 0 48px;
       }
 
       .hero {
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 28px;
-        padding: 40px;
+        padding: 30px;
         box-shadow: var(--shadow);
-        margin-bottom: 28px;
+        margin-bottom: 20px;
       }
 
       .hero h1 {
         margin: 0 0 12px;
-        font-size: clamp(2rem, 4vw, 3.3rem);
+        font-size: clamp(1.75rem, 3.4vw, 2.8rem);
         line-height: 1.1;
       }
 
@@ -82,8 +83,8 @@
       .meta {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 14px;
-        margin-top: 22px;
+        gap: 12px;
+        margin-top: 18px;
       }
 
       .meta-card {
@@ -102,34 +103,34 @@
         background: rgba(255, 253, 248, 0.92);
         border: 1px solid var(--border);
         border-radius: 24px;
-        padding: 28px;
+        padding: 22px;
         box-shadow: var(--shadow);
-        margin-bottom: 24px;
+        margin-bottom: 18px;
       }
 
       h2 {
-        margin: 0 0 16px;
-        font-size: 1.6rem;
+        margin: 0 0 12px;
+        font-size: 1.4rem;
       }
 
       h3 {
-        margin: 24px 0 10px;
-        font-size: 1.1rem;
+        margin: 18px 0 8px;
+        font-size: 1rem;
       }
 
       p {
-        margin: 0 0 14px;
+        margin: 0 0 12px;
       }
 
       .gallery {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 18px;
-        margin-top: 18px;
+        gap: 14px;
+        margin-top: 14px;
       }
 
       .gallery.two-up {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       }
 
       figure {
@@ -141,9 +142,9 @@
       }
 
       figcaption {
-        font-size: 0.95rem;
+        font-size: 0.88rem;
         color: var(--muted);
-        margin-top: 10px;
+        margin-top: 8px;
       }
 
       .note {
@@ -152,6 +153,67 @@
         background: #fff7f1;
         border-radius: 10px;
         color: var(--muted);
+      }
+
+      @page {
+        size: letter portrait;
+        margin: 0.6in;
+      }
+
+      @media print {
+        body {
+          background: #ffffff !important;
+          color: #111111;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        .container {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+        }
+
+        .hero,
+        .section,
+        figure,
+        .meta-card {
+          box-shadow: none;
+        }
+
+        .hero,
+        .section {
+          background: #ffffff;
+          border-color: #d8d8d8;
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        .hero {
+          margin-bottom: 18px;
+        }
+
+        .section {
+          margin-bottom: 18px;
+        }
+
+        .gallery {
+          gap: 12px;
+        }
+
+        figure {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        img {
+          object-fit: contain;
+          background: #ffffff;
+        }
+
+        a {
+          text-decoration: none;
+        }
       }
 
       @media (max-width: 720px) {
