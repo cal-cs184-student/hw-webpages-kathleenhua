@@ -320,12 +320,18 @@
 			h1,
 			.names,
 			.subtitle,
+			.center,
 			.link-card {
 				column-span: all;
 			}
 
 			.center {
-				display: none;
+				display: block;
+				padding: 0.025in 0.04in;
+				border: 0.4pt solid rgba(255, 120, 120, 0.28);
+				background: rgba(255, 20, 50, 0.08) !important;
+				border-radius: 5pt;
+				overflow-wrap: anywhere;
 			}
 
 			.badge {
@@ -375,6 +381,18 @@
 				background: linear-gradient(135deg, #b10f1c, #5a080e) !important;
 				color: #ffffff;
 				font-size: 7pt;
+			}
+
+			.link-card a[href*="youtu"]::after {
+				content: "\A" attr(href);
+				display: block;
+				margin-top: 0.015in;
+				color: #ffd5d8;
+				font-size: 5.8pt;
+				font-weight: 500;
+				line-height: 1.05;
+				overflow-wrap: anywhere;
+				white-space: pre-wrap;
 			}
 
 			.section-card {
@@ -512,21 +530,11 @@
 
 		<div class="center">
 			Link to webpage:
-			<a href="https://cal-cs184-student.github.io/hw-webpages-tpmandy24/Final%20Project/index.html">Final Webpage</a>
-		</div>
-
-		<br>
-
-		<div class="center">
-			Link to presentation slides:
-			<a href="https://docs.google.com/presentation/d/100VBF35g3-jTDw5Dvf1SCMahNxBZWT_yDE0f3P5lfZQ/edit?usp=sharing">Presentation Slides</a>
-		</div>
-
-		<br>
-
-		<div class="center">
-			Link to demo video:
-			<a href="https://youtu.be/RU9It2UJ3OY">Demo Video</a>
+			<a href="https://cal-cs184-student.github.io/hw-webpages-kathleenhua/final-writeup/index.html">https://cal-cs184-student.github.io/hw-webpages-kathleenhua/final-writeup/index.html</a>
+			<br>Link to presentation slides:
+			<a href="https://tinyurl.com/projhailmcslides">https://tinyurl.com/projhailmcslides</a>
+			<br>Link to demo video:
+			<a href="https://youtu.be/RU9It2UJ3OY">https://youtu.be/RU9It2UJ3OY</a>
 		</div>
 
 		<figure>
@@ -555,10 +563,10 @@
 			</p>
 
 			<p>
-				Our project focuses on the idea that shader effects can act as both technical rendering tools and
-				storytelling tools. By modifying the final image produced by Minecraft, we were able to create a
-				darker, more dramatic visual style without rewriting Minecraft’s rendering engine. The final result
-				includes a red Petrova Line-inspired scene, screen-space particle effects, a glowing light stream,
+				Our project focuses on the idea that shader effects can act as both rendering tools and
+				storytelling tools. By modifying the default world, we were able to create a
+				darker, more visual style without rewriting Minecraft’s rendering engine. The final result
+				includes a red Petrova Line-inspired scene, screen-space particle effects,
 				and a Planet Adrian-inspired green atmosphere in the End dimension.
 			</p>
 		</section>
@@ -574,7 +582,7 @@
 			</p>
 
 			<p>
-				Minecraft is normally bright, blocky, and visually simple. This made it a useful base environment
+				Minecraft is normally bright and visually simple. This made it a useful base environment
 				because any shader change is immediately visible. By pushing the color palette toward red, adding
 				glow and haze, and simulating particles in screen space, we could make the same Minecraft world feel
 				more like a science-fiction scene.
@@ -720,7 +728,7 @@
 			</p>
 
 			<p>
-				We also created a Planet Adrian-inspired environment by modifying the End dimension into a green
+				We also created a Planet Adrian-inspired environment by enveloping the End into a green
 				atmospheric scene. This demonstrates that the same shader pipeline can support different fictional
 				environments by changing color grading, haze, and sky effects.
 			</p>
@@ -765,21 +773,21 @@
 			<p>
 				The main tradeoff is that our approach is not physically accurate. The particles and haze are
 				approximations rather than full volumetric simulations. However, this tradeoff allowed us to maintain
-				real-time performance and keep the shader practical for interactive gameplay.
+				 performance and keep the shader practical for gameplay.
 			</p>
 
 			<div class="comparison-row">
 				<div class="image-card">
 					<img src="assets/end_vanilla.jpeg" alt="Vanilla Minecraft End scene">
 					<figcaption>
-						Vanilla-style End environment before the Adrian atmosphere shader pass.
+						Vanilla-style End environment.
 					</figcaption>
 				</div>
 
 				<div class="image-card">
 					<img src="assets/Screenshot 2026-05-01 at 10.24.12 AM.png" alt="Final end shader comparison">
 					<figcaption>
-						Final shader scene with green Adrian atmosphere.
+						Final shader scene.
 					</figcaption>
 				</div>
 			</div>
@@ -789,7 +797,7 @@
 			<h2>Additional Rendered Scenes</h2>
 
 			<p>
-				We also added additional skins from <i>Project Hail Mary</i> to further emulate and imitate the movie. We downloaded a custom Ryan Gosling skin for the Zombie Piglin to stand in as the protagonist, Dr. Grace. We created a custom Strider skin using pixel art to imitate Rocky, the alien, that the protagonist Grace interacts with.
+				We also added additional skins from <i>Project Hail Mary</i> to further imitate the movie. We downloaded a custom Ryan Gosling skin for the Zombie Piglin, Dr. Grace. We created a custom Strider skin to imitate Rocky, the alien, that the protagonist Grace interacts with.
 				For these additional skins in the Resource Pack, we added them as SymLinks to our ReadMe for this project in order to make them universally downloadable so all users of this project can enjoy interacting with the characters from the movie.
 			</p>
 
@@ -817,7 +825,7 @@
 				<div class="image-card">
 					<img src="assets/2026-05-01_10.32.51.png" alt="Character scene">
 					<figcaption>
-						Character scene showing both characters together
+						Both characters together
 					</figcaption>
 				</div>
 			</div>
@@ -829,14 +837,14 @@
 			<p>
 				During testing, our shader did not introduce noticeable delay or major frame drops compared to regular
 				Minecraft or standard shader packs. Since most of our effects are screen-space post-processing effects,
-				they are relatively lightweight. Instead of using expensive geometry-heavy or volumetric techniques,
+				they are lightweight. Instead of using expensive geometry-heavy or volumetric techniques,
 				we focused on visual approximations that still communicate the intended atmosphere.
 			</p>
 
 			<p>
 				This performance choice was important because Minecraft is interactive. A shader that looks good but
 				makes the game difficult to move through would not meet our project goals. Our final implementation
-				prioritizes smoothness, responsiveness, and real-time visual feedback.
+				prioritizes smooth gameplay.
 			</p>
 		</section>
 
